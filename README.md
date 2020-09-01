@@ -38,6 +38,8 @@ If you already have nssm installed, a default path to the nssm exe is assumed as
     service_user        => 'LocalSystem',
     service_interactive => true,
     create_user         => false,
+	logfile 			=> "C:\directory\logfile.log",
+	appdirectory		=> "C:\yourapp\bin"
     app_parameters      => "-jar C:\swarm-jar-with-dependencies.jar -mode exclusive -executors 8 -username jenkins -password password -master http://localhost:8080 -labels windows -fsroot C:\opt\ci",
     require             => Nssm::Install['Jenkins_Agent'],
   }
