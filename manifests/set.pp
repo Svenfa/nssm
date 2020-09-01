@@ -23,6 +23,7 @@ define nssm::set (
   $app_parameters      = undef,
   $appdirectory        = undef,
   $logfile             = undef,
+  $nssm_path           = 'C:\Program Files\nssm-2.24\win64',
 ) {
 
   if $create_user {
@@ -43,39 +44,39 @@ define nssm::set (
   # http://grokbase.com/t/gg/salt-users/152vyb5vx1/weird-whitespace-problem-getting-data-out-of-cmd-run-nssm-on-windows
   exec { 'set_service_name':
     command  => $command,
-    path     => 'C:\Program Files\nssm-2.24\win64',
+    path     => "$nssm_path",
     unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' ObjectName; \$cmp = \$args.Contains(\"${service_user}\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
     provider => powershell,
   }
 
   exec { 'set_app_parameters':
     command  => "nssm set '${service_name}' AppParameters '${app_parameters}'",
-    path     => 'C:\Program Files\nssm-2.24\win64',
+    path     => "$nssm_path",
     unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' AppParameters; \$cmp = \$args.Contains(\"${app_parameters}\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
     provider => powershell,
   }
   exec { 'set_appdirectory':
     command  => "nssm set '${service_name}' AppDirectory '${appdirectory}'",
-    path     => 'C:\Program Files\nssm-2.24\win64',
+    path     => "$nssm_path",
     unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' AppDirectory; \$cmp = \$args.Contains(\"${appdirectory}\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
     provider => powershell,
   }
   exec { 'set_app_stdout':
     command  => "nssm set '${service_name}' AppStdout '${logfile}'",
-    path     => 'C:\Program Files\nssm-2.24\win64',
+    path     => "$nssm_path",
     unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' AppStdout; \$cmp = \$args.Contains(\"${logfile}\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
     provider => powershell,
   }
   exec { 'set_app_errout':
     command  => "nssm set '${service_name}' AppStderr '${logfile}'",
-    path     => 'C:\Program Files\nssm-2.24\win64',
+    path     => "$nssm_path",
     unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' AppStderr; \$cmp = \$args.Contains(\"${logfile}\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
     provider => powershell,
   }
   if $service_interactive {
     exec { 'set_service_interactive_process':
       command  => "nssm reset '${service_name}' ObjectName; nssm set '${service_name}' Type SERVICE_INTERACTIVE_PROCESS",
-      path     => 'C:\Program Files\nssm-2.24\win64',
+      path     => "$nssm_path",
       unless   => "[Console]::OutputEncoding = [System.Text.Encoding]::Unicode; \$args = nssm get '${service_name}' Type; \$cmp = \$args.Contains(\"INTERACTIVE\"); if (\$cmp -eq \"True\") {exit 0} else {exit 1}",
       provider => powershell,
     }
